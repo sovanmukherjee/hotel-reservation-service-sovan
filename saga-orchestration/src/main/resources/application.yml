@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: saga-orchestration
+
+  cloud: 
+    stream: 
+      bindings:
+        reservationCreatedEvent-in-0: 
+          destination: crs-reservation-event-topic
+          content-type: application/json
+        createPaymentRequest-out: 
+          destination: crs-payment-cmd-topic
+          content-type: application/json
+        paymentCreatedEvent-in-0: 
+          destination: crs-payment-event-topic
+          content-type: application/json
+        updateHotelBookStatus-out: 
+          destination: crs-hotel-book-status-cmd-topic
+          content-type: application/json
+      kafka: 
+        binder:
+          brokers: "localhost:9092"
+    function: 
+      definition: reservationCreatedEvent;paymentCreatedEvent
+  
+  
+
+server:
+  port: 8093
+ 
+      
+
+   
+   
+     
