@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: crs-config-server
+  cloud:
+    config:
+      enabled: true
+      server:
+#        git:
+#          uri: https://github.com/{username}/config.git
+#          username: 
+#          password: 
+#          skipSslValidation: true  
+#          force-pull: true 
+        native:
+          searchLocations: file:///C:/sovan/workspace-sts/crs/config
+  profiles:
+    active: native 
+#spring.cloud.config.server.bootstrap: true
+
+eureka.client.service-url.defaultZone: http://localhost:8761/eureka/ 
+server:
+  port: 8099
+  
+      
+
+   
+ 
