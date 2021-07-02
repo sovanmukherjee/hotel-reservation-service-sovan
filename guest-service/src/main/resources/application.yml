@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: guest-service
+  data:
+    rest:
+      base-path: /v1/guests
+  config:
+     import: optional:configserver:http://localhost:8099 
+  datasource:
+    url: jdbc:mysql://localhost:3306/guestsdb?useSSL=false&serverTimezone=UTC
+    username: ${mysql.username}
+    password: ${mysql.password}
+  jpa:
+    show-sql: true 
+    hibernate:
+      naming: 
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        id:
+          new_generator_mappings: false
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  
+  
+spring.cloud.config.name: config
+#spring.cloud.config.discovery.enabled: true
+#spring.cloud.config.discovery.serviceId: CRS-CONFIG-SERVER
+management.endpoints.web.exposure.include: refresh   
+feign:
+  circuitbreaker:
+    enabled: true
+              
+server:
+  port: 8091
+  servlet:
+    context-path: /api  
+      
+eureka.client.service-url.defaultZone: http://localhost:8761/eureka/ 
+spring.sleuth.sampler.probability: 1.0   
+   
+message:
+  errorConfig:
+      genericErrorCode: GC_GENERIC_ERROR
+      genericErrorMessage: There was an error while processing your request. Please try again.
+      guestInfoErrorCode: GC_GUEST_INFO_ERROR
+      guestInfoErrorMessage: Please provide guest %s information
+      guestNotFoundErrorCode: GC_GUEST_NOTFOUND_ERROR
+      guestNotFoundErrorMessage: Guest %s %s not found.
+      inputValidationErrorCode: GC_INPUT_VALIDATION_ERROR
+  messageConfig:
+      addUpdateGuestMessage: "Guest %s %s successfully"
+       
+    
+     
