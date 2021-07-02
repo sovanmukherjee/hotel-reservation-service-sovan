@@ -1,0 +1,94 @@
+spring:
+  application:
+    name: crs-gateway
+  cloud:
+      gateway:
+        default-filters:
+         - name: GatewayPreFilter
+         - name: GatewayPostFilter
+        routes:
+          - id: hotels
+            uri: lb://HOTEL-SERVICE
+            predicates:
+               - Path=/api/v1/hotels/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: myCircuitBreaker
+                  fallbackUri: forward:/fallback
+          - id: guests
+            uri: lb://GUEST-SERVICE
+            predicates:
+               - Path=/api/v1/guests/**
+ 
+eureka.client.service-url.defaultZone: http://localhost:8761/eureka/ 
+
+server: 
+  port: 8098
+  
+  
+security.secret: secretsecretsecretsecretsecretsecretsecretsecret  
+#in second   
+security.expiration:  3600 
+
+security.password.encoder.secret: passwordEncodeSecret
+security.password.encoder.iteration: 65536
+security.password.encoder.keylength: 256
+
+spring.main.allow-bean-definition-overriding: true   
+ 
+users:
+  user:
+      username: user
+      password: IP0uZZDa4FaQ8X/hvV7UMxsoX95xu41utgwx1vvP8UM=
+      roles:
+        - ROLE_USER
+      enabled: true
+  admin:
+    username: admin
+    password: znv0Pivxup1evVJM6rGiwNX1jQv5RPmqd9Dex3GWaoM=
+    roles:
+      - ROLE_ADMIN
+    enabled: true 
+  crs:
+    username: crs
+    password: wopC2rFCg6b3GeNe68V1hyZbt+vBPgky8PuIfWhd6hs=
+    roles:
+      - ROLE_CRS
+    enabled: true  
+    
+    
+    
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 2s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+      recordExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+      ignoreExceptions:
+        - java.lang.IllegalStateException
+    shared:
+      slidingWindowSize: 100
+      permittedNumberOfCallsInHalfOpenState: 30
+      waitDurationInOpenState: 1s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+      ignoreExceptions:
+        - java.lang.IllegalStateException
+  instances:
+    backendA:
+      baseConfig: default
+    backendB:
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 10
+      permittedNumberOfCallsInHalfOpenState: 3
+      waitDurationInOpenState: 1s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10    
